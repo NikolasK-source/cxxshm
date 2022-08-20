@@ -40,7 +40,13 @@ static void *mmap_shm(std::size_t size, int fd, bool read_only, const std::strin
     return addr;
 }
 
+static void check_name(const std::string &name) {
+    if (name.empty()) throw std::invalid_argument("name is empty");
+}
+
 SharedMemory::SharedMemory(std::string name, bool read_only) : NAME(std::move(name)), CREATED(false) {
+    check_name(NAME);
+
     // open shared memory object
     fd = shm_open(NAME.c_str(), read_only ? O_RDONLY : O_RDWR, 0660);
     if (fd < 0) {
@@ -63,6 +69,8 @@ SharedMemory::SharedMemory(std::string name, bool read_only) : NAME(std::move(na
 
 SharedMemory::SharedMemory(std::string name, std::size_t size, bool read_only, bool exclusive)
     : NAME(std::move(name)), CREATED(true) {
+    check_name(NAME);
+
     int flags = O_CREAT;
     flags |= read_only ? O_RDONLY : O_RDWR;
     if (exclusive) flags |= O_EXCL;

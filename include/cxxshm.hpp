@@ -42,6 +42,7 @@ public:
      * @param read_only  connect without write permissions
      *
      * @exception system_error thrown if one of the system calls shm_open, fstat or mmap failed
+     * @exception invalid_argument name is empty
      */
     explicit SharedMemory(std::string name, bool read_only = false);
 
@@ -55,6 +56,7 @@ public:
      * @param exclusive  fail if a shared memory with the same name already exists
      *
      * @exception system_error thrown if one of the system calls shm_open, fstat, ftruncate or mmap failed
+     * @exception invalid_argument name is empty
      */
     explicit SharedMemory(std::string name, std::size_t size, bool read_only = false, bool exclusive = true);
 
@@ -72,7 +74,7 @@ public:
      *
      * @return size in bytes
      */
-    [[nodiscard]] size_t get_size() const { return size; }
+    [[maybe_unused, nodiscard]] size_t get_size() const { return size; }
 
     /**
      * @brief get address to the shared memory
@@ -116,7 +118,7 @@ public:
      * @return reference to array element
      */
     template <typename type>
-    [[nodiscard]] type &operator[](std::size_t index) {
+    [[maybe_unused, nodiscard]] type &operator[](std::size_t index) {
         return get_addr<type *>()[index];
     }
 
@@ -128,7 +130,7 @@ public:
      * @return const reference to array element
      */
     template <typename type>
-    [[nodiscard]] const type &operator[](std::size_t index) const {
+    [[maybe_unused, nodiscard]] const type &operator[](std::size_t index) const {
         return get_addr<type *>()[index];
     }
 
@@ -136,7 +138,7 @@ public:
      * @brief get name of the shared memory object
      * @return name
      */
-    [[nodiscard]] const std::string &get_name() const { return NAME; }
+    [[maybe_unused, nodiscard]] const std::string &get_name() const { return NAME; }
 
     /**
      * @brief "array access" with range check
@@ -146,7 +148,7 @@ public:
      * @return reference to array element
      */
     template <typename type>
-    [[nodiscard]] type &at(std::size_t index) {
+    [[maybe_unused, nodiscard]] type &at(std::size_t index) {
         range_check(index, sizeof(type));
         return get_addr<type *>()[index];
     }
@@ -159,7 +161,7 @@ public:
      * @return const reference to array element
      */
     template <typename type>
-    [[nodiscard]] const type &at(std::size_t index) const {
+    [[maybe_unused, nodiscard]] const type &at(std::size_t index) const {
         range_check(index, sizeof(type));
         return get_addr<type *>()[index];
     }
