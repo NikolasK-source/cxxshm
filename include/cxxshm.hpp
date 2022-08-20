@@ -131,7 +131,7 @@ public:
      */
     template <typename type>
     [[maybe_unused, nodiscard]] const type &operator[](std::size_t index) const {
-        return get_addr<type *>()[index];
+        return get_addr<const type *>()[index];
     }
 
     /**
@@ -163,7 +163,7 @@ public:
     template <typename type>
     [[maybe_unused, nodiscard]] const type &at(std::size_t index) const {
         range_check(index, sizeof(type));
-        return get_addr<type *>()[index];
+        return get_addr<const type *>()[index];
     }
 
 private:
