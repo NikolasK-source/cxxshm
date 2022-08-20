@@ -58,7 +58,7 @@ SharedMemory::SharedMemory(std::string name, bool read_only) : NAME(std::move(na
     size = static_cast<size_t>(shm_stats.st_size);
 
     // map shared memory
-    addr = mmap_shm(size, fd, read_only, NAME);
+    addr = size ? mmap_shm(size, fd, read_only, NAME) : nullptr;
 }
 
 SharedMemory::SharedMemory(std::string name, std::size_t size, bool read_only, bool exclusive)
@@ -92,7 +92,7 @@ SharedMemory::SharedMemory(std::string name, std::size_t size, bool read_only, b
     }
 
     // map shared memory
-    addr = mmap_shm(size, fd, read_only, NAME);
+    addr = size ? mmap_shm(size, fd, read_only, NAME) : nullptr;
 }
 
 SharedMemory::~SharedMemory() {
