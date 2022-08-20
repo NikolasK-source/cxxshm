@@ -196,5 +196,3 @@ private:
 [[maybe_unused, nodiscard]] std::string get_lib_date();
 
 }  // namespace cxxshm
-
-void example();
