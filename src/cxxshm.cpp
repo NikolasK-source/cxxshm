@@ -110,6 +110,10 @@ SharedMemory::~SharedMemory() {
     }
 }
 
+void SharedMemory::range_check(std::size_t index, std::size_t element_size) const {
+    if ((index + 1) * element_size > size) { throw std::out_of_range("index out of range"); }
+}
+
 std::string get_lib_version() { return {PROJECT_VERSION}; }
 
 std::string get_lib_info() { return {PROJECT_NAME " " PROJECT_VERSION " - " COMPILER_INFO " on " SYSTEM_INFO}; }

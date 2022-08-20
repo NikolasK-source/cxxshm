@@ -125,18 +125,53 @@ public:
      *
      * @tparam type data type
      * @param index array index
-     * @return reference to array element
+     * @return const reference to array element
      */
     template <typename type>
     [[nodiscard]] const type &operator[](std::size_t index) const {
         return get_addr<type *>()[index];
     }
 
-    /*! \brief get name of the shared memory object
-     *
+    /**
+     * @brief get name of the shared memory object
      * @return name
      */
     [[nodiscard]] const std::string &get_name() const { return NAME; }
+
+    /**
+     * @brief "array access" with range check
+     *
+     * @tparam type data type
+     * @param index array index
+     * @return reference to array element
+     */
+    template <typename type>
+    [[nodiscard]] type &at(std::size_t index) {
+        range_check(index, sizeof(type));
+        return get_addr<type *>()[index];
+    }
+
+    /**
+     * @brief const "array access" with range check
+     *
+     * @tparam type data type
+     * @param index array index
+     * @return const reference to array element
+     */
+    template <typename type>
+    [[nodiscard]] const type &at(std::size_t index) const {
+        range_check(index, sizeof(type));
+        return get_addr<type *>()[index];
+    }
+
+private:
+    /**
+     * @brief internal method: preform a range check
+     * @param index access index
+     * @param element_size element size (use sizeof)
+     * @exception std::out_of_range index is out of range
+     */
+    void range_check(std::size_t index, std::size_t element_size) const;
 };
 
 /**
