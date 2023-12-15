@@ -61,6 +61,7 @@ function(clangwarn target)
     target_compile_options(${target} PUBLIC -Wno-error=unused-exception-parameter)
     target_compile_options(${target} PUBLIC -Wno-nested-anon-types)
     target_compile_options(${target} PUBLIC -Wno-gnu-anonymous-struct)
+    target_compile_options(${target} PUBLIC -Wno-unsafe-buffer-usage)
 
 endfunction()
 
