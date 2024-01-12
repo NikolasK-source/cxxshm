@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.13.4 FATAL_ERROR)
 
-project(cxxshm LANGUAGES CXX VERSION 1.0.0)
+project(cxxshm LANGUAGES CXX VERSION 1.1.0)
 set(CMAKE_CXX_STANDARD 17)
 
 set(Target cxxshm)
