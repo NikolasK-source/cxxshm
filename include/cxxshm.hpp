@@ -54,11 +54,14 @@ public:
      *                   a size 0 will not change the size
      * @param read_only  connect without write permissions
      * @param exclusive  fail if a shared memory with the same name already exists
+     * @param mode       shm file permission bits
+     *                   (Symbolic definitions of these constants can be obtained by including <sys/stat.h>.)
      *
      * @exception system_error thrown if one of the system calls shm_open, fstat, ftruncate or mmap failed
      * @exception invalid_argument name is empty
      */
-    explicit SharedMemory(std::string name, std::size_t size, bool read_only = false, bool exclusive = true);
+    explicit SharedMemory(
+            std::string name, std::size_t size, bool read_only = false, bool exclusive = true, mode_t mode = 0660);
 
     /**
      * @brief unmaps the shared memory

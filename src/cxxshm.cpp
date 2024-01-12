@@ -48,7 +48,7 @@ SharedMemory::SharedMemory(std::string name, bool read_only) : NAME(std::move(na
     check_name(NAME);
 
     // open shared memory object
-    fd = shm_open(NAME.c_str(), read_only ? O_RDONLY : O_RDWR, 0660);
+    fd = shm_open(NAME.c_str(), read_only ? O_RDONLY : O_RDWR, 0);
     if (fd < 0) {
         throw std::system_error(errno, std::generic_category(), "Failed to open shared memory '" + NAME + '\'');
     }
@@ -67,7 +67,7 @@ SharedMemory::SharedMemory(std::string name, bool read_only) : NAME(std::move(na
     addr = size ? mmap_shm(size, fd, read_only, NAME) : nullptr;
 }
 
-SharedMemory::SharedMemory(std::string name, std::size_t size, bool read_only, bool exclusive)
+SharedMemory::SharedMemory(std::string name, std::size_t size, bool read_only, bool exclusive, mode_t mode)
     : NAME(std::move(name)), CREATED(true) {
     check_name(NAME);
 
@@ -75,8 +75,11 @@ SharedMemory::SharedMemory(std::string name, std::size_t size, bool read_only, b
     flags |= read_only ? O_RDONLY : O_RDWR;
     if (exclusive) flags |= O_EXCL;
 
+    // only the lowest 9 bit are relevant
+    mode &= 0x1FF;
+
     // open shared memory object
-    fd = shm_open(NAME.c_str(), flags, 0660);
+    fd = shm_open(NAME.c_str(), flags, mode);
     if (fd < 0) {
         throw std::system_error(errno, std::generic_category(), "Failed to open shared memory '" + NAME + '\'');
     }
