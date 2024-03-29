@@ -1,3 +1,6 @@
 docs_doxy
 cmake-build-*
 build
+src/generated/*.cpp
+src/generated/*.hpp
+include/cxxshm_version_info.hpp
