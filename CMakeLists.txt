@@ -9,11 +9,10 @@ cmake_minimum_required(VERSION 3.22.0 FATAL_ERROR)
 # ======================================================================================================================
 
 # project
-project(cxxshm LANGUAGES CXX VERSION 1.1.1)
+project(cxxshm LANGUAGES CXX VERSION 2.0.0)
 
 set(Target cxxshm)
 set(STANDARD 20)
-set(ARCHITECTURE "native")        # CPU architecture to optimize for (only relevant if OPTIMIZE_FOR_ARCHITECTURE is ON)
 
 # options
 option(BUILD_DOC "Build documentation" ON)
@@ -26,9 +25,11 @@ option(CLANG_FORMAT "use clang-format" ON)
 option(CLANG_TIDY "use clang-tidy" ON)
 option(CLANG_TIDY_NO_ERRORS "do not treat clang-tidy warnings as errors" ON)
 option(OPTIMIZE_FOR_ARCHITECTURE "enable optimizations for specified architecture" OFF)
+option(ARCHITECTURE "CPU architecture to optimize for" "native")
 option(COMPILER_EXTENSIONS "enable compiler specific C++ extensions" OFF)
 option(ENABLE_TEST "enable test builds" ON)
 option(STATIC_LIB "build static library" OFF)
+option(INSTAL_LIB "add library to install target" ON)
 
 # ======================================================================================================================
 # ======================================================================================================================
@@ -66,7 +67,7 @@ else ()
 endif ()
 
 if (INSTAL_LIB)
-    install(${Target})
+    install(TARGETS ${Target})
 endif ()
 
 # set source and include directory
