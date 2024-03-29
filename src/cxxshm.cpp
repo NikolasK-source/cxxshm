@@ -125,19 +125,4 @@ void SharedMemory::range_check(std::size_t index, std::size_t element_size) cons
     if ((index + 1) * element_size > size) { throw std::out_of_range("index out of range"); }
 }
 
-std::string get_lib_version() { return {PROJECT_VERSION}; }
-
-std::string get_lib_info() { return {PROJECT_NAME " " PROJECT_VERSION " - " COMPILER_INFO " on " SYSTEM_INFO}; }
-
-std::string get_lib_date() {
-#ifdef COMPILER_CLANG
-#    pragma clang diagnostic push
-#    pragma clang diagnostic ignored "-Wdate-time"
-#endif
-    return {__DATE__ " " __TIME__};
-#ifdef COMPILER_CLANG
-#    pragma clang diagnostic pop
-#endif
-}
-
 }  // namespace cxxshm

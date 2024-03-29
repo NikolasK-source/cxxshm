@@ -4,6 +4,7 @@
  */
 
 #include "cxxshm.hpp"
+#include "cxxshm_version_info.hpp"
 
 #include <iostream>
 #include <sstream>
@@ -20,9 +21,11 @@
     } while (false)
 
 int main() {
-    std::cout << cxxshm::get_lib_version() << std::endl;
-    std::cout << cxxshm::get_lib_info() << std::endl;
-    std::cout << cxxshm::get_lib_date() << std::endl;
+    std::cout << cxxshm_version_info::NAME << std::endl;
+    std::cout << cxxshm_version_info::VERSION_STR << std::endl;
+    std::cout << cxxshm_version_info::COMPILER << std::endl;
+    std::cout << cxxshm_version_info::SYSTEM << std::endl;
+    std::cout << cxxshm_version_info::GIT_HASH << std::endl;
 
     constexpr std::size_t SHM_SIZE = 256;
 #ifdef COMPILER_CLANG

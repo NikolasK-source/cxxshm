@@ -28,7 +28,7 @@ option(CLANG_TIDY_NO_ERRORS "do not treat clang-tidy warnings as errors" ON)
 option(OPTIMIZE_FOR_ARCHITECTURE "enable optimizations for specified architecture" OFF)
 option(COMPILER_EXTENSIONS "enable compiler specific C++ extensions" OFF)
 option(ENABLE_TEST "enable test builds" ON)
-option(STATIC_LIB "build static library" ON)
+option(STATIC_LIB "build static library" OFF)
 
 # ======================================================================================================================
 # ======================================================================================================================

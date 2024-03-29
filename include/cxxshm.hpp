@@ -179,23 +179,4 @@ private:
     void range_check(std::size_t index, std::size_t element_size) const;
 };
 
-/**
- * @brief get library version
- * @return library version as string
- */
-[[maybe_unused, nodiscard]] std::string get_lib_version();
-
-/**
- * @brief get full library info
- * @details contains name, version, compiler and system
- * @return library info as string
- */
-[[maybe_unused, nodiscard]] std::string get_lib_info();
-
-/**
- * @brief get library compilation date
- * @return compilation date as string
- */
-[[maybe_unused, nodiscard]] std::string get_lib_date();
-
 }  // namespace cxxshm
