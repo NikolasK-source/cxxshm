@@ -14,18 +14,17 @@
 #    error The test only works on linux !
 #endif
 
-#define test_fail(line, reason)                                                                                        \
-    do {                                                                                                               \
-        std::cerr << "Test failed: " << reason << " (" << line << ')' << std::endl;                                    \
-        return EXIT_FAILURE;                                                                                           \
-    } while (false)
+[[noreturn]] static void test_fail(std::size_t line, const char *reason) {
+    std::cerr << "Test failed: " << (reason) << " (" << (line) << ')' << '\n';
+    exit(EXIT_FAILURE);
+}
 
 int main() {
-    std::cout << cxxshm_version_info::NAME << std::endl;
-    std::cout << cxxshm_version_info::VERSION_STR << std::endl;
-    std::cout << cxxshm_version_info::COMPILER << std::endl;
-    std::cout << cxxshm_version_info::SYSTEM << std::endl;
-    std::cout << cxxshm_version_info::GIT_HASH << std::endl;
+    std::cout << cxxshm_version_info::NAME << '\n';
+    std::cout << cxxshm_version_info::VERSION_STR << '\n';
+    std::cout << cxxshm_version_info::COMPILER << '\n';
+    std::cout << cxxshm_version_info::SYSTEM << '\n';
+    std::cout << cxxshm_version_info::GIT_HASH << '\n';
 
     constexpr std::size_t SHM_SIZE = 256;
 #ifdef COMPILER_CLANG
@@ -51,7 +50,7 @@ int main() {
             try {
                 cxxshm::SharedMemory shm2(SHM_NAME, SHM_SIZE, false, true);
                 test_fail(__LINE__, "Can open again in exclusive mode");
-            } catch (std::system_error &) {}
+            } catch (std::system_error &) {}  // NOLINT
 
             // connect to shared memory
             cxxshm::SharedMemory shm3(SHM_NAME);
@@ -60,15 +59,17 @@ int main() {
             if (shm3.get_size() != SHM_SIZE) { test_fail(__LINE__, "wrong size"); }
 
             // rw test
-            shm3.at<int>(5) = 0x42;
-            if (shm.at<int>(5) != 0x42) { test_fail(__LINE__, "not the same value"); }
+            static constexpr int         RW_TEST_VALUE = 0x42;
+            static constexpr std::size_t RW_TEST_INDEX = 5;
+            shm3.at<int>(RW_TEST_INDEX)                = RW_TEST_VALUE;
+            if (shm.at<int>(RW_TEST_INDEX) != RW_TEST_VALUE) { test_fail(__LINE__, "not the same value"); }
 
             // out of range
             try {
                 auto x = shm3.at<int>(SHM_SIZE);
                 static_cast<void>(x);
                 test_fail(__LINE__, "oor access");
-            } catch (const std::out_of_range &) {}
+            } catch (const std::out_of_range &) {}  // NOLINT
 
             // connect to const shared memory
             const cxxshm::SharedMemory shm4(SHM_NAME);
@@ -77,14 +78,14 @@ int main() {
             if (shm4.get_size() != SHM_SIZE) { test_fail(__LINE__, "wrong size"); }
 
             // read test
-            if (shm4.at<int>(5) != 0x42) { test_fail(__LINE__, "not the same value"); }
+            if (shm4.at<int>(RW_TEST_INDEX) != RW_TEST_VALUE) { test_fail(__LINE__, "not the same value"); }
 
             // out of range
             try {
                 auto x = shm4.at<int>(SHM_SIZE);
                 static_cast<void>(x);
                 test_fail(__LINE__, "oor access");
-            } catch (const std::out_of_range &) {}
+            } catch (const std::out_of_range &) {}  // NOLINT
         }
 
         // check if shm exists

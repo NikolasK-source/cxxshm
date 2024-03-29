@@ -48,7 +48,7 @@ SharedMemory::SharedMemory(std::string name, bool read_only) : NAME(std::move(na
     check_name(NAME);
 
     // open shared memory object
-    fd = shm_open(NAME.c_str(), read_only ? O_RDONLY : O_RDWR, 0);
+    fd = shm_open(NAME.c_str(), read_only ? O_RDONLY : O_RDWR, 0);  // NOLINT
     if (fd < 0) {
         throw std::system_error(errno, std::generic_category(), "Failed to open shared memory '" + NAME + '\'');
     }
@@ -76,10 +76,10 @@ SharedMemory::SharedMemory(std::string name, std::size_t size, bool read_only, b
     if (exclusive) flags |= O_EXCL;
 
     // only the lowest 9 bit are relevant
-    mode &= 0x1FF;
+    mode &= 0x1FF;  // NOLINT
 
     // open shared memory object
-    fd = shm_open(NAME.c_str(), flags, mode);
+    fd = shm_open(NAME.c_str(), flags, mode);  // NOLINT
     if (fd < 0) {
         throw std::system_error(errno, std::generic_category(), "Failed to open shared memory '" + NAME + '\'');
     }
