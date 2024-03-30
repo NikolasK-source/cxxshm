@@ -74,8 +74,6 @@ if (INSTAL_LIB)
     )
 endif ()
 
-message(STATUS ">>>>${CMAKE_INSTALL_LIBDIR}")
-
 # set source and include directory
 add_subdirectory(src)
 add_subdirectory(include)
