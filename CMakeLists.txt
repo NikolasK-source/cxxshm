@@ -9,7 +9,7 @@ cmake_minimum_required(VERSION 3.22.0 FATAL_ERROR)
 # ======================================================================================================================
 
 # project
-project(cxxshm LANGUAGES CXX VERSION 2.0.0)
+project(cxxshm LANGUAGES CXX VERSION 2.0.1)
 
 set(Target cxxshm)
 set(STANDARD 20)
@@ -68,6 +68,9 @@ endif ()
 
 if (INSTAL_LIB)
     install(TARGETS ${Target})
+    install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/
+    DESTINATION include
+    FILES_MATCHING PATTERN "*.h*")
 endif ()
 
 # set source and include directory
