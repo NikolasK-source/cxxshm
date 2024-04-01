@@ -5,7 +5,7 @@
 
 # warnings that are valid for gcc and clang
 function(commonwarn target)
-    target_compile_options(${target} PUBLIC -Wall -Wextra -Werror -pedantic -pedantic-errors)
+    target_compile_options(${target} PUBLIC -Wall -Wextra -pedantic -pedantic-errors)
 
     # see https://gcc.gnu.org/onlinedocs/gcc-4.3.2/gcc/Warning-Options.html for more details
 
@@ -62,7 +62,6 @@ function(clangwarn target)
     target_compile_options(${target} PUBLIC -Wno-nested-anon-types)
     target_compile_options(${target} PUBLIC -Wno-gnu-anonymous-struct)
     target_compile_options(${target} PUBLIC -Wno-source-uses-openmp)
-    target_compile_options(${target} PUBLIC -Wno-unsafe-buffer-usage)
 
 endfunction()
 

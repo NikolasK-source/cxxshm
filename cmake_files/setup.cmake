@@ -1,15 +1,22 @@
 #
-# Copyright (C) 2022-2024 Nikolas Koesling <nikolas@koesling.info>.
+# Copyright (C) 2024 Nikolas Koesling <nikolas@koesling.info>.
 # This program is free software. You can redistribute it and/or modify it under the terms of the MIT License.
 #
 
 set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
 
 include(CTest)
-include(ClangFormat.cmake)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
+# Determine whether this is a standalone project or included by other projects
+set(STANDALONE_PROJECT OFF)
+if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+    set(STANDALONE_PROJECT ON)
+endif ()
+
+# ----------------------------------------------- clang-tidy -----------------------------------------------------------
+# ======================================================================================================================
 if(CLANG_TIDY)
     if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         if (${CLANG_TIDY_NO_ERRORS}) 
@@ -27,6 +34,8 @@ if(CLANG_TIDY)
     endif()
 endif()
 
+# ----------------------------------------------- library target -------------------------------------------------------
+# ======================================================================================================================
 if (STATIC_LIB)
     add_library(${Target} STATIC)
 else ()
@@ -53,10 +62,10 @@ if (INSTAL_LIB)
         EXPORT ${Target}Targets
         FILE ${Target}Targets.cmake
         NAMESPACE "${Target}::"
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cxxshm
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${Target}
     )
 
-    configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
+    configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake_files/Config.cmake.in
         "${CMAKE_CURRENT_BINARY_DIR}/${Target}Config.cmake"
         INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${Target}
     )
@@ -74,7 +83,8 @@ if (INSTAL_LIB)
     )
 endif ()
 
-# set source and include directory
+# ----------------------------------------------- set source and include directory -------------------------------------
+# ======================================================================================================================
 add_subdirectory(src)
 add_subdirectory(include)
 target_include_directories(${Target} PUBLIC  
@@ -82,9 +92,11 @@ target_include_directories(${Target} PUBLIC
     $<INSTALL_INTERFACE:include>  # <prefix>/include
 )
 
-include(warnings.cmake)
-include(define.cmake)
-include(compileropts.cmake)
+# ----------------------------------------------- warnings, compiler definitions and otions ----------------------------
+# ======================================================================================================================
+include(cmake_files/warnings.cmake)
+include(cmake_files/define.cmake)
+include(cmake_files/compileropts.cmake)
 
 # force C++ Standard and disable/enable compiler specific extensions
 set_target_properties(${Target} PROPERTIES
@@ -93,16 +105,12 @@ set_target_properties(${Target} PROPERTIES
         CXX_EXTENSIONS ${COMPILER_EXTENSIONS}
 )
 
-# Determine whether this is a standalone project or included by other projects
-set(STANDALONE_PROJECT OFF)
-if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
-    set(STANDALONE_PROJECT ON)
-endif ()
-
+# enable tests only for standalone project
 if (ENABLE_TEST AND STANDALONE_PROJECT)
     add_subdirectory(test)
 endif ()
 
+# disable compiler warnings if project is not a standalone project
 if (NOT STANDALONE_PROJECT)
     unset(COMPILER_WARNINGS)
 endif ()
@@ -129,8 +137,9 @@ if (ENABLE_MULTITHREADING)
     target_link_libraries(${Target} PRIVATE Threads::Threads)
 endif ()
 
-
-if (BUILD_DOC)
+# ----------------------------------------------- doxygen documentation ------------------------------------------------
+# ======================================================================================================================
+if (BUILD_DOC AND NOT STANDALONE_PROJECT)
     # doxygen documentation (https://vicrucann.github.io/tutorials/quick-cmake-doxygen/)
     # check if Doxygen is installed
     find_package(Doxygen)
@@ -166,11 +175,11 @@ if (BUILD_DOC)
 endif ()
 
 # add clang format target
-if (CLANG_FORMAT)
+if (CLANG_FORMAT AND NOT STANDALONE_PROJECT)
     set(CLANG_FORMAT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/.clang-format)
 
     if (EXISTS ${CLANG_FORMAT_FILE})
-        include(ClangFormat.cmake)
+        include(cmake_files/ClangFormat.cmake)
         target_clangformat_setup(${Target})
         message(STATUS "Added clang format target(s)")
     else ()
