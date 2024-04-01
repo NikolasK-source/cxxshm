@@ -18,7 +18,9 @@ function(create_test name)
     target_link_libraries(test_${name}_${Target} PRIVATE rt)
 endfunction()
 
-# test all
+# test 1: create shm
+create_test("1")
 
+# test all
 create_test("all")
 
