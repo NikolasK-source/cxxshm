@@ -17,12 +17,12 @@ endif ()
 
 # ----------------------------------------------- clang-tidy -----------------------------------------------------------
 # ======================================================================================================================
-if(CLANG_TIDY)
+if(CLANG_TIDY AND STANDALONE_PROJECT)
     if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         if (${CLANG_TIDY_NO_ERRORS}) 
-            set (CLANG_TIDY_CONFIG_FILE ${CMAKE_SOURCE_DIR}/.clang-tidy-noerrors)
+            set (CLANG_TIDY_CONFIG_FILE ${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy-noerrors)
         else()
-            set (CLANG_TIDY_CONFIG_FILE ${CMAKE_SOURCE_DIR}/.clang-tidy)
+            set (CLANG_TIDY_CONFIG_FILE ${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy)
         endif()
 
         set(CMAKE_CXX_CLANG_TIDY
@@ -53,7 +53,7 @@ if (INSTAL_LIB)
     )
 
     install(
-        DIRECTORY ${CMAKE_SOURCE_DIR}/include/
+        DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
         FILES_MATCHING PATTERN "*.h*"
     )
@@ -139,7 +139,7 @@ endif ()
 
 # ----------------------------------------------- doxygen documentation ------------------------------------------------
 # ======================================================================================================================
-if (BUILD_DOC AND NOT STANDALONE_PROJECT)
+if (BUILD_DOC AND STANDALONE_PROJECT)
     # doxygen documentation (https://vicrucann.github.io/tutorials/quick-cmake-doxygen/)
     # check if Doxygen is installed
     find_package(Doxygen)
@@ -191,22 +191,22 @@ endif ()
 # output is not the acutal generated file --> command is always executed
 add_custom_command(
     OUTPUT
-        ${CMAKE_SOURCE_DIR}/src/generated/version_info_cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/generated/version_info_cpp
 
     COMMAND
-        bash ${CMAKE_SOURCE_DIR}/scripts/gen_version_info_cpp.sh ${PROJECT_NAME}
+        bash ${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_version_info_cpp.sh ${PROJECT_NAME}
 
     WORKING_DIRECTORY
-        ${CMAKE_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 execute_process(
-    COMMAND bash "${CMAKE_SOURCE_DIR}/scripts/gen_version_info_cpp.sh" ${PROJECT_NAME}
+    COMMAND bash "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_version_info_cpp.sh" ${PROJECT_NAME}
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 add_custom_target(${Target}_generated_version_info
-    DEPENDS ${CMAKE_SOURCE_DIR}/src/generated/version_info_cpp
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/generated/version_info_cpp
 )
 
 add_dependencies(${Target} ${Target}_generated_version_info)
