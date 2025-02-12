@@ -9,7 +9,7 @@ cmake_minimum_required(VERSION 3.22.0 FATAL_ERROR)
 # ======================================================================================================================
 
 # project
-project(cxxshm LANGUAGES CXX VERSION 2.0.2)
+project(cxxshm LANGUAGES CXX VERSION 2.0.3)
 
 set(Target cxxshm)
 set(STANDARD 20)
