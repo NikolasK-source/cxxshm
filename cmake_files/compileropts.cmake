@@ -14,12 +14,12 @@ function(commonopts target)
 
     if(MAKE_32_BIT_BINARY)
         message(STATUS "Compiling as 32 bit binary.")
-        target_compile_options(${target} PUBLIC -m32)
+        target_compile_options(${target} PRIVATE -m32)
     endif()
 
     if(OPTIMIZE_FOR_ARCHITECTURE)
         message(STATUS "using architecture specific code generator: ${ARCHITECTURE}")
-        target_compile_options(${target} PUBLIC -march=${ARCHITECTURE})
+        target_compile_options(${target} PRIVATE -march=${ARCHITECTURE})
     endif()
 endfunction()
 
@@ -31,7 +31,7 @@ function(set_options target use_omp)
 
         if(CMAKE_SYSTEM_NAME MATCHES "Windows")
             # TODO check options
-            target_compile_options(${target} PUBLIC -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd)
+            target_compile_options(${target} PRIVATE -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd)
             SET(CMAKE_CXX_FLAGS_DEBUG "-g3 -D_DEBUG")
         endif()
     elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
@@ -39,7 +39,7 @@ function(set_options target use_omp)
         SET(CMAKE_CXX_FLAGS_DEBUG "/Zi")
 
         if(ENABLE_MULTITHREADING AND OPENMP)
-            target_compile_options(${target} PUBLIC /OpenMP)
+            target_compile_options(${target} PRIVATE /OpenMP)
         endif()
     else()
         message(AUTHOR_WARNING

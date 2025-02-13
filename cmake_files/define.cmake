@@ -31,6 +31,9 @@ function(set_definitions target)
     target_compile_definitions(${target} PRIVATE "PROJECT_NAME=\"${PROJECT_NAME}\"")
     target_compile_definitions(${target} PRIVATE "COMPILER_INFO=\"${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}\"")
     target_compile_definitions(${target} PRIVATE "SYSTEM_INFO=\"${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_VERSION} ${CMAKE_HOST_SYSTEM_PROCESSOR}\"")
+    string(REPLACE "-" "_" project_name_rcs "${PROJECT_NAME}")
+    string(REPLACE " " "_" project_name_rcs "${project_name_rcs}")
+    target_compile_definitions(${target} PRIVATE "RCS_HASH=${project_name_rcs}\_version_info::GIT_HASH")
 
     # system
     if (CMAKE_SYSTEM_NAME MATCHES "Linux")
